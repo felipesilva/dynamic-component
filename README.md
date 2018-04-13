@@ -9,3 +9,4 @@ rendered.
 
 Here's how it looks:
 
+![screenshot](screenshot.png)
