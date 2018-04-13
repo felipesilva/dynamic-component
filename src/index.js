@@ -1,8 +1,7 @@
-import React, { Component } from "react";
+import React, { createElement, Component } from "react";
+import createReactClass from 'create-react-class';
 import ReactDOM from "react-dom";
 import { css } from "emotion";
-
-import Interactive from "./Interactive";
 
 /**
  * This is what is published:
@@ -29,6 +28,39 @@ function create({ createReactClass, createElement: h, css }) {
   })
 }
 `;
+
+/**
+ * The Interactive component.
+ * 
+ * In its constructor, it evals and calls the function, returning a Component,
+ * which is then rendered.
+ * 
+ */
+class Interactive extends Component {
+  constructor(props) {
+    super(props);
+    const { componentString } = props;
+    /* eslint-disable no-new-func */
+    const componentFactory = Function(`return ( ${componentString} );`)();
+    const Component = componentFactory({
+      createReactClass,
+      createElement,
+      css
+    });
+    this.state = {
+      Component,
+      userData: {
+        name: "Fancy Times McReader"
+      }
+    }
+  }
+  render() {
+    const { Component, userData } = this.state
+    if (!Component) return null;
+    return <Component userData={userData} />;
+  }
+}
+
 
 class Demo extends Component {
   render() {
